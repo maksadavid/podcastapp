@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tutu/ui/search_page.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.title}) : super(key: key);
@@ -13,7 +14,10 @@ class HomePageState extends State<HomePage> {
   final podcasts = List<String>.generate(10000, (i) => "Podcast $i");
 
   void addPodcast() {
-
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => SearchPage(title: "Search")),
+    );
   }
 
   @override

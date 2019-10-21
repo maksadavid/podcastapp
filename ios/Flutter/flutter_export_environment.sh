@@ -2,7 +2,7 @@
 # This is a generated file; do not edit or check into version control.
 export "FLUTTER_ROOT=/Users/maksadavid/Desktop/dev/flutter"
 export "FLUTTER_APPLICATION_PATH=/Users/maksadavid/Desktop/dev/flutter_app/tutu/tutu"
-export "FLUTTER_TARGET=/Users/maksadavid/Desktop/dev/flutter_app/tutu/tutu/lib/main.dart"
+export "FLUTTER_TARGET=/Users/maksadavid/Desktop/dev/flutter_app/tutu/tutu/lib/ui/main.dart"
 export "FLUTTER_BUILD_DIR=build"
 export "SYMROOT=${SOURCE_ROOT}/../build/ios"
 export "FLUTTER_FRAMEWORK_DIR=/Users/maksadavid/Desktop/dev/flutter/bin/cache/artifacts/engine/ios"
