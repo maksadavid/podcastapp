@@ -9,7 +9,7 @@ class ITunesPodcastSearchResult {
   factory ITunesPodcastSearchResult.fromJson(Map<String, dynamic> json) {
     List results = json['results'];
     List<Podcast> podcasts = results.map((json) {
-      return Podcast(json['trackName']);
+      return Podcast.fromJson(json);
     }).toList();
     return ITunesPodcastSearchResult(podcasts);
   }

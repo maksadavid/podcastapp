@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tutu/core/itunes_podcast_search_result.dart';
 import 'package:tutu/core/podcast.dart';
 import 'package:tutu/search/podcast_search_data_source.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class SearchPage extends StatefulWidget {
   SearchPage({Key key, this.title}) : super(key: key);
@@ -82,8 +83,13 @@ class PodcastSearchDelegate extends SearchDelegate<String> {
             return ListView.builder(
                 itemCount: podcasts.length,
                 itemBuilder: (context, index) {
+                  Podcast podcast = podcasts[index];
                   return ListTile(
-                    title: Text(podcasts[index].title),
+                    title: Text(podcast.title),
+                    leading: CachedNetworkImage(
+                        width: 60,
+                        imageUrl: podcast.thumbnailUrl),
+                    subtitle: Text(podcast.author),
                     onTap: () {
 
                     },
