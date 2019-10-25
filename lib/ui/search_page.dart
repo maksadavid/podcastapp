@@ -3,6 +3,7 @@ import 'package:tutu/core/itunes_podcast_search_result.dart';
 import 'package:tutu/core/podcast.dart';
 import 'package:tutu/search/podcast_search_data_source.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:tutu/ui/podcast_detail_page.dart';
 
 class SearchPage extends StatefulWidget {
   SearchPage({Key key, this.title}) : super(key: key);
@@ -91,7 +92,11 @@ class PodcastSearchDelegate extends SearchDelegate<String> {
                         imageUrl: podcast.thumbnailUrl),
                     subtitle: Text(podcast.author),
                     onTap: () {
-
+                      Navigator.push(context, MaterialPageRoute(
+                        builder: (context) {
+                          return PodcastDetailPage(podcast: podcast);
+                        })
+                      );
                     },
                   );
                 }
