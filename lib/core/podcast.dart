@@ -2,6 +2,8 @@
 
 
 
+import 'package:tutu/core/podcast_episode.dart';
+
 class Podcast {
 
   String title;
@@ -9,16 +11,9 @@ class Podcast {
   String thumbnailUrl;
   String rssUrl;
   String author;
+  List<PodcastEpisode> episodes;
 
   Podcast(this.title, this.imageUrl, this.thumbnailUrl, this.rssUrl,
       this.author);
 
-  factory Podcast.fromJson(Map<String, dynamic> json) {
-    return Podcast(json['trackName'],
-        json['artworkUrl100'],
-        json['artworkUrl60'],
-        json['feedUrl'],
-        json['artistName']
-    );
-  }
 }

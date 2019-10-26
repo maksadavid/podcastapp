@@ -5,6 +5,8 @@ import 'package:tutu/podcast/podcast_data_source.dart';
 import 'package:tutu/search/podcast_search_data_source.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
+import 'custom/CustomImage.dart';
+
 class PodcastDetailPage extends StatefulWidget {
   PodcastDetailPage({Key key, this.podcast}) : super(key: key);
 
@@ -30,26 +32,25 @@ class PodcastDetailPageState extends State<PodcastDetailPage> {
         body: FutureBuilder<Podcast>(
             future: podcastFuture,
             builder: (context, snapshot) {
-              if (snapshot.connectionState != ConnectionState.done ||
-                  !snapshot.hasData) {
+              if(snapshot.connectionState != ConnectionState.done) {
                 return Center(
                     child: CircularProgressIndicator()
+                );
+              } else if (!snapshot.hasData) {
+                return AlertDialog(
+                    title: Text("Error"),
+                  content: Text(snapshot.error.toString()),
                 );
               }
               return SingleChildScrollView(
                   child: Column(
-                    mainAxisSize: MainAxisSize.max,
                     children: <Widget>[
                       Container(
-                          color: Colors.grey[50],
                           height: MediaQuery.of(context).size.width,
+                          width: MediaQuery.of(context).size.width,
                           padding: new EdgeInsets.all(40.0),
-                          child: CachedNetworkImage(
-                            placeholder: (context, string) {
-                              return Center(
-                                  child: CircularProgressIndicator());
-                              },
-                            imageUrl: snapshot.data.imageUrl,
+                          child: CustomImage(
+                            url: snapshot.data.imageUrl,
                           )
                       )
                     ],
