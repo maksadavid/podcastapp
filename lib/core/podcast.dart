@@ -13,6 +13,8 @@ class Podcast {
   String author;
   List<PodcastEpisode> episodes;
 
+  String description;
+
   Podcast(this.title, this.imageUrl, this.thumbnailUrl, this.rssUrl,
       this.author);
 

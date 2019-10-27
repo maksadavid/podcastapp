@@ -1,7 +1,6 @@
 
 
 
-import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:tutu/core/podcast.dart';
@@ -22,7 +21,8 @@ class PodcastService {
     RssFeed rss = RssFeed.parse(xmlString);
     String imageUrl = rss.image != null ? rss.image.url : null;
     Podcast podcast = Podcast(rss.title, imageUrl, imageUrl, rss.link, rss.author);
-//    podcast.episodes = rss.items.map(createFromRssItem);
+    podcast.description = rss.description;
+    podcast.episodes = rss.items.map(createFromRssItem).toList();
     return podcast;
   }
 

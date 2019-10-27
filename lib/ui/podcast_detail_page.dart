@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:tutu/core/itunes_podcast_search_result.dart';
 import 'package:tutu/core/podcast.dart';
 import 'package:tutu/podcast/podcast_data_source.dart';
-import 'package:tutu/search/podcast_search_data_source.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 
 import 'custom/CustomImage.dart';
+import 'custom/ExpandableText.dart';
 
 class PodcastDetailPage extends StatefulWidget {
   PodcastDetailPage({Key key, this.podcast}) : super(key: key);
@@ -42,16 +40,20 @@ class PodcastDetailPageState extends State<PodcastDetailPage> {
                   content: Text(snapshot.error.toString()),
                 );
               }
+              Podcast podcast = snapshot.data;
               return SingleChildScrollView(
                   child: Column(
                     children: <Widget>[
                       Container(
                           height: MediaQuery.of(context).size.width,
                           width: MediaQuery.of(context).size.width,
-                          padding: new EdgeInsets.all(40.0),
-                          child: CustomImage(
-                            url: snapshot.data.imageUrl,
-                          )
+                          padding: EdgeInsets.fromLTRB(40, 0, 40, 0),
+                          child: CustomImage(url: podcast.imageUrl,)
+                      ),
+                      Container(
+                        padding: EdgeInsets.all(20.0),
+                        child: ExpandableText(podcast.description),
+                        color: Colors.grey[200],
                       )
                     ],
                   )
