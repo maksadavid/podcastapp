@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:tutu/ui/custom/AppColors.dart';
+import 'package:tutu/ui/custom/app_colors.dart';
 
 class AppImages {
 

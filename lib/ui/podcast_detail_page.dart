@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:tutu/core/podcast.dart';
 import 'package:tutu/podcast/podcast_data_source.dart';
-import 'package:tutu/ui/custom/AppColors.dart';
+import 'package:tutu/ui/custom/app_colors.dart';
 
-import 'custom/CustomImage.dart';
-import 'custom/ExpandableText.dart';
+import 'custom/custom_image.dart';
+import 'custom/expandable_text.dart';
 
 class PodcastDetailPage extends StatefulWidget {
   PodcastDetailPage({Key key, this.podcast}) : super(key: key);

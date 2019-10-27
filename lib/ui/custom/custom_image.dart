@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:tutu/ui/custom/AppImages.dart';
+import 'package:tutu/ui/custom/app_images.dart';
 
 class CustomImage extends StatelessWidget {
 
