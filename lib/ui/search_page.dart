@@ -5,6 +5,8 @@ import 'package:tutu/search/podcast_search_data_source.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:tutu/ui/podcast_detail_page.dart';
 
+import 'custom/AppColors.dart';
+
 class SearchPage extends StatefulWidget {
   SearchPage({Key key, this.title}) : super(key: key);
 
@@ -25,7 +27,7 @@ class SearchPageState extends State<SearchPage> {
             IconButton(
                 icon: Icon(
                     Icons.search,
-                    color: Colors.white
+                    color: AppColors.white
                 ),
                 onPressed: () {
                     showSearch(context: context, delegate: PodcastSearchDelegate());

@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:tutu/ui/custom/AppImages.dart';
 
 class CustomImage extends StatelessWidget {
 
@@ -18,9 +19,6 @@ class CustomImage extends StatelessWidget {
         },
       );
     }
-    return Image(
-      image: AssetImage("assets/images/default.png"),
-      fit: BoxFit.fill,
-    );
+    return AppImages.defaultImage;
   }
 }

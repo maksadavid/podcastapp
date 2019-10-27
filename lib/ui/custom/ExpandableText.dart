@@ -1,5 +1,8 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:tutu/ui/custom/AppColors.dart';
+
+import 'Strings.dart';
 
 class ExpandableText extends StatefulWidget {
 
@@ -22,8 +25,8 @@ class ExpandableTextState extends State<ExpandableText> {
           text: expanded ? widget.text : widget.text.substring(0, 100) + "...",
           children: [
             TextSpan(
-                text: " " + (expanded ? "Less" : "More"),
-                style: TextStyle(color: Colors.blueAccent),
+                text: " " + (expanded ? Strings.showLess : Strings.showMore),
+                style: TextStyle(color: AppColors.accent),
                 recognizer: TapGestureRecognizer()..onTap = () {
                   setState(() {
                     expanded = !expanded;

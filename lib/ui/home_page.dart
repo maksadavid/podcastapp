@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:tutu/ui/search_page.dart';
 
+import 'custom/AppColors.dart';
+
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.title}) : super(key: key);
 
@@ -29,7 +31,7 @@ class HomePageState extends State<HomePage> {
             IconButton(
                 icon: Icon(
                     Icons.add,
-                    color: Colors.white
+                    color: AppColors.white
                 ),
                 onPressed: addPodcast
             ),

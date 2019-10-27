@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tutu/core/podcast.dart';
 import 'package:tutu/podcast/podcast_data_source.dart';
+import 'package:tutu/ui/custom/AppColors.dart';
 
 import 'custom/CustomImage.dart';
 import 'custom/ExpandableText.dart';
@@ -47,13 +48,18 @@ class PodcastDetailPageState extends State<PodcastDetailPage> {
                       Container(
                           height: MediaQuery.of(context).size.width,
                           width: MediaQuery.of(context).size.width,
-                          padding: EdgeInsets.fromLTRB(40, 0, 40, 0),
+                          color: AppColors.lightBackground,
+                          padding: EdgeInsets.fromLTRB(40, 40, 40, 40),
                           child: CustomImage(url: podcast.imageUrl,)
+                      ),
+                      Container(
+                        height: 1,
+                        color: AppColors.white,
                       ),
                       Container(
                         padding: EdgeInsets.all(20.0),
                         child: ExpandableText(podcast.description),
-                        color: Colors.grey[200],
+                        color: AppColors.lightBackground,
                       )
                     ],
                   )

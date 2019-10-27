@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'custom/AppColors.dart';
 import 'home_page.dart';
 
 void main() => runApp(MyApp());
@@ -9,7 +10,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Podcast',
       theme: ThemeData(
-        primarySwatch: Colors.blueGrey,
+        primarySwatch: AppColors.primary,
       ),
       home: HomePage(title: 'Flutter hello'),
     );
