@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tutu/ui/search_page.dart';
 
-import 'custom/app_colors.dart';
+import 'utils/app_colors.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.title}) : super(key: key);

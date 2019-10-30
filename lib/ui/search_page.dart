@@ -5,7 +5,7 @@ import 'package:tutu/search/podcast_search_data_source.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:tutu/ui/podcast_detail_page.dart';
 
-import 'custom/app_colors.dart';
+import 'utils/app_colors.dart';
 
 class SearchPage extends StatefulWidget {
   SearchPage({Key key, this.title}) : super(key: key);

@@ -1,8 +1,8 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:tutu/ui/custom/app_colors.dart';
+import 'package:tutu/ui/utils/app_colors.dart';
 
-import 'strings.dart';
+import '../utils/strings.dart';
 
 class ExpandableText extends StatefulWidget {
 
