@@ -5,7 +5,7 @@ import 'package:tutu/ui/utils/app_colors.dart';
 class AppImages {
 
     static SvgPicture defaultImage = SvgPicture.asset(
-      "assets/images/def.svg",
+      "assets/images/default.svg",
       fit: BoxFit.fill,
       color: AppColors.primary,
     );

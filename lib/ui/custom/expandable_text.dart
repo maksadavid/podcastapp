@@ -20,21 +20,25 @@ class ExpandableTextState extends State<ExpandableText> {
   
   @override
   Widget build(BuildContext context) {
+    List<InlineSpan> children = List();
+    if(widget.text.length >= 102) {
+      children.add(
+          TextSpan(
+              text: " " + (expanded ? Strings.showLess : Strings.showMore),
+              style: TextStyle(color: AppColors.accent),
+              recognizer: TapGestureRecognizer()..onTap = () {
+                setState(() {
+                  expanded = !expanded;
+                });
+              }
+          )
+      );
+    }
     return Text.rich(
       TextSpan(
-          text: expanded ? widget.text : widget.text.substring(0, 100) + "...",
-          children: [
-            TextSpan(
-                text: " " + (expanded ? Strings.showLess : Strings.showMore),
-                style: TextStyle(color: AppColors.accent),
-                recognizer: TapGestureRecognizer()..onTap = () {
-                  setState(() {
-                    expanded = !expanded;
-                  });
-                }
-            ),
-          ],
-      ),
+          text: (expanded || widget.text.length < 102) ? widget.text : widget.text.substring(0, 100) + "...",
+          children: children
+      )
     );
   }
 }

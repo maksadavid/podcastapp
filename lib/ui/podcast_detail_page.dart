@@ -13,7 +13,7 @@ class PodcastDetailPage extends StatefulWidget {
   final Podcast podcast;
 
   @override
-  PodcastDetailPageState createState() => PodcastDetailPageState();
+  PodcastDetailPageState createState() => PodcastDetailPageState(podcast.rssUrl);
 }
 
 class PodcastDetailPageState extends State<PodcastDetailPage> {
@@ -21,10 +21,8 @@ class PodcastDetailPageState extends State<PodcastDetailPage> {
   PodcastDataSource dataSource = PodcastDataSource();
   Future<Podcast> podcastFuture;
 
-  @override
-  void initState() {
-    podcastFuture = dataSource.fetchPodcast(widget.podcast.rssUrl);
-    super.initState();
+  PodcastDetailPageState(String rssUrl) {
+    podcastFuture = dataSource.fetchPodcast(rssUrl);
   }
 
   @override
@@ -48,8 +46,7 @@ class PodcastDetailPageState extends State<PodcastDetailPage> {
                 );
               }
               Podcast podcast = snapshot.data;
-              return SingleChildScrollView(
-                  child: Column(
+              return ListView(
                     children: <Widget>[
                       Container(
                           height: MediaQuery.of(context).size.width,
@@ -74,17 +71,16 @@ class PodcastDetailPageState extends State<PodcastDetailPage> {
                         color: AppColors.lightBackground,
                       ),
                       Container(height: 1, color: AppColors.white),
-                      PodcastEpisodeTile(podcast, podcast.episodes.first),
+                      PodcastEpisodeTile(podcast, 0),
                       Container(height: 1, color: AppColors.white),
-                      PodcastEpisodeTile(podcast, podcast.episodes[1]),
+                      PodcastEpisodeTile(podcast, 1),
                       Container(height: 1, color: AppColors.white),
-                      PodcastEpisodeTile(podcast, podcast.episodes[2]),
+                      PodcastEpisodeTile(podcast, 2),
                       Container(height: 1, color: AppColors.white),
-                      PodcastEpisodeTile(podcast, podcast.episodes[3]),
+                      PodcastEpisodeTile(podcast, 3),
                       Container(height: 1, color: AppColors.white),
                       Container(height: 100)
                     ],
-                  )
               );
             }
         )

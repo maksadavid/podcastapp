@@ -111,5 +111,4 @@ class PodcastSearchDelegate extends SearchDelegate<String> {
       ),
     );
   }
-
 }

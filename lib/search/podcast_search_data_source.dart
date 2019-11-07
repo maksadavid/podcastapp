@@ -7,8 +7,16 @@ import 'package:tutu/service/service_holder.dart';
 
 class PodcastSearchDataSource {
 
+  String query;
+  Future<ITunesPodcastSearchResult> searchResult;
+
   Future<ITunesPodcastSearchResult> fetchPodcasts(String query) {
-    return ServiceHolder.iTunesPodcastService.fetchPodcasts(query);
+    if (this.query == query) {
+      return searchResult;
+    }
+    this.query = query;
+    searchResult = ServiceHolder.iTunesPodcastService.fetchPodcasts(query);
+    return searchResult;
   }
 
 }

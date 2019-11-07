@@ -7,18 +7,25 @@ import 'package:tutu/ui/utils/app_colors.dart';
 class PodcastEpisodeTile extends StatelessWidget {
 
   final Podcast podcast;
-  final PodcastEpisode episode;
+  final int episodeIndex;
 
-  PodcastEpisodeTile(this.podcast, this.episode);
+  PodcastEpisodeTile(this.podcast, this.episodeIndex);
 
   @override
   Widget build(BuildContext context) {
+    if(podcast.episodes.length <= episodeIndex) {
+      return Container();
+    }
+    PodcastEpisode episode = podcast.episodes[episodeIndex];
     return Container(
       color: AppColors.lightBackground,
       padding: EdgeInsets.fromLTRB(0, 4, 0, 4),
       child: ListTile(
-        leading: CustomImage(
-          url: podcast.thumbnailUrl,
+        leading: Container(
+          width: 60,
+          child: CustomImage(
+            url: podcast.thumbnailUrl,
+          ),
         ),
         title: Text(episode.title),
         subtitle: Text(episode.pubDate),

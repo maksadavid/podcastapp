@@ -11,7 +11,7 @@ import 'package:tutu/core/podcast.dart';
 class ITunesPodcastService {
 
   Future<ITunesPodcastSearchResult> fetchPodcasts(String query) async {
-    if (query.isEmpty) {
+    if (query == null || query.isEmpty) {
       return ITunesPodcastSearchResult(List<Podcast>());
     }
     final response = await http.get('https://itunes.apple.com/search?entity=podcast&term=' + query);

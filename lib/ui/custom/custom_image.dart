@@ -19,6 +19,8 @@ class CustomImage extends StatelessWidget {
         },
       );
     }
-    return AppImages.defaultImage;
+    return FittedBox(
+      child: AppImages.defaultImage,
+    );
   }
 }
