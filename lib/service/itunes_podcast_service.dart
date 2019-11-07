@@ -14,7 +14,7 @@ class ITunesPodcastService {
     if (query == null || query.isEmpty) {
       return ITunesPodcastSearchResult(List<Podcast>());
     }
-    final response = await http.get('https://itunes.apple.com/search?entity=podcast&term=' + query);
+    final response = await http.get('https://itunes.apple.com/search?entity=feature.podcast&term=' + query);
     if (response.statusCode == 200) {
       // If server returns an OK response, parse the JSON.
       return parseITunesPodcastSearchResultFromJson(json.decode(response.body));

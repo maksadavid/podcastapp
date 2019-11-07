@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tutu/core/podcast.dart';
-import 'package:tutu/podcast/podcast_data_source.dart';
+import 'package:tutu/feature/podcast/podcast_data_source.dart';
 import 'package:tutu/ui/utils/app_colors.dart';
 
 import 'custom/custom_image.dart';

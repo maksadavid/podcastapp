@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:tutu/core/itunes_podcast_search_result.dart';
 import 'package:tutu/core/podcast.dart';
-import 'package:tutu/search/podcast_search_data_source.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:tutu/feature/search/podcast_search_data_source.dart';
 import 'package:tutu/ui/podcast_detail_page.dart';
 
 import 'utils/app_colors.dart';
