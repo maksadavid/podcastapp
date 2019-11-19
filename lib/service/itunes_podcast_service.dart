@@ -6,6 +6,7 @@ import 'package:tutu/core/itunes_podcast_search_result.dart';
 import 'dart:convert';
 
 import 'package:tutu/core/podcast.dart';
+import 'package:tutu/core/podcast_episode.dart';
 
 
 class ITunesPodcastService {
@@ -14,7 +15,7 @@ class ITunesPodcastService {
     if (query == null || query.isEmpty) {
       return ITunesPodcastSearchResult(List<Podcast>());
     }
-    final response = await http.get('https://itunes.apple.com/search?entity=feature.podcast&term=' + query);
+    final response = await http.get('https://itunes.apple.com/search?entity=podcast&term=' + query);
     if (response.statusCode == 200) {
       // If server returns an OK response, parse the JSON.
       return parseITunesPodcastSearchResultFromJson(json.decode(response.body));
@@ -31,11 +32,14 @@ class ITunesPodcastService {
   }
 
   static Podcast parsePodcastFromJson(Map<String, dynamic> json) {
-    return Podcast(json['trackName'],
+    return Podcast(0,
+        json['trackName'],
         json['artworkUrl100'],
         json['artworkUrl60'],
         json['feedUrl'],
-        json['artistName']
+        json['artistName'],
+        List<PodcastEpisode>(),
+        ""
     );
   }
 

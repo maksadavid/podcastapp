@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tutu/core/podcast.dart';
 import 'package:tutu/feature/podcast/podcast_data_source.dart';
+import 'package:tutu/service/service_holder.dart';
 import 'package:tutu/ui/utils/app_colors.dart';
 
 import 'custom/custom_image.dart';
@@ -13,16 +14,15 @@ class PodcastDetailPage extends StatefulWidget {
   final Podcast podcast;
 
   @override
-  PodcastDetailPageState createState() => PodcastDetailPageState(podcast.rssUrl);
+  PodcastDetailPageState createState() => PodcastDetailPageState();
 }
 
 class PodcastDetailPageState extends State<PodcastDetailPage> {
 
-  PodcastDataSource dataSource = PodcastDataSource();
-  Future<Podcast> podcastFuture;
+  PodcastDataSource dataSource;
 
-  PodcastDetailPageState(String rssUrl) {
-    podcastFuture = dataSource.fetchPodcast(rssUrl);
+  PodcastDetailPageState() {
+    dataSource = PodcastDataSource(widget.podcast);
   }
 
   @override
@@ -32,8 +32,8 @@ class PodcastDetailPageState extends State<PodcastDetailPage> {
           title: Text(widget.podcast.title),
         ),
         backgroundColor: AppColors.lightBackground,
-        body: FutureBuilder<Podcast>(
-            future: podcastFuture,
+        body: StreamBuilder<Podcast>(
+            stream: dataSource.getPodcastStream(),
             builder: (context, snapshot) {
               if(snapshot.connectionState != ConnectionState.done) {
                 return Center(
@@ -56,6 +56,22 @@ class PodcastDetailPageState extends State<PodcastDetailPage> {
                           child: CustomImage(url: podcast.imageUrl,)
                       ),
                       Container(height: 1, color: AppColors.white),
+                      Container(
+                        child: Row(
+                          children: <Widget>[
+                            FlatButton(
+                                onPressed: () {
+                                    ServiceHolder.databaseService.podcastStorage.save(podcast).then((f) {
+                                      Scaffold.of(context).showSnackBar( SnackBar(content: Text("Saved"),));
+                                    });
+                                },
+                                child: Text("Subscribe!",
+                                  style: TextStyle(fontSize: 30),
+                                )
+                            )
+                          ],
+                        ),
+                      ),
                       Container(
                         padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
                         child: Text(

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:tutu/ui/splash_page.dart';
 import 'utils/app_colors.dart';
-import 'home_page.dart';
 
 void main() => runApp(MyApp());
 
@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: AppColors.primary,
       ),
-      home: HomePage(title: 'Flutter hello'),
+      home: SplashPage(title: 'Flutter hello'),
     );
   }
 }

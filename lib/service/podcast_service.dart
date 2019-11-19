@@ -19,15 +19,18 @@ class PodcastService {
 
   Future<Podcast> parseRssFeed(String xmlString) async {
     RssFeed rss = RssFeed.parse(xmlString);
-    String imageUrl = rss.image != null ? rss.image.url : null;
-    Podcast podcast = Podcast(rss.title, imageUrl, imageUrl, rss.link, rss.author);
+    String title = rss.title != null ? rss.title : "";
+    String imageUrl = (rss.image != null && rss.image.url != null) ? rss.image.url : "";
+    String link = rss.link != null ? rss.link : "";
+    String author = rss.author != null ? rss.author : "";
+    Podcast podcast = Podcast(0, title, imageUrl, imageUrl, link, author, List<PodcastEpisode>(), "");
     podcast.description = rss.description;
     podcast.episodes = rss.items.map(createFromRssItem).toList();
     return podcast;
   }
 
   PodcastEpisode createFromRssItem(RssItem item) {
-    return PodcastEpisode(item.title, item.description, item.link, item.pubDate, item.comments);
+    return PodcastEpisode(0, 0, item.title, item.description, item.link, item.pubDate, item.comments);
   }
 
 }

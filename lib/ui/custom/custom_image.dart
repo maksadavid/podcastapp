@@ -13,7 +13,10 @@ class CustomImage extends StatelessWidget {
     if(url != null) {
       return CachedNetworkImage(
         imageUrl: url,
-        placeholder: (context, string) {
+        errorWidget: (context, url, error) {
+          return Container();
+        },
+        placeholder: (context, url) {
           return Center(
               child: CircularProgressIndicator());
         },

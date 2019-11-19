@@ -1,4 +1,7 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:tutu/core/podcast.dart';
+import 'package:tutu/ui/podcast_detail_page.dart';
 import 'package:tutu/ui/search_page.dart';
 
 import 'utils/app_colors.dart';
@@ -13,7 +16,11 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> {
-  final podcasts = List<String>.generate(10000, (i) => "Podcast $i");
+  Future<List<Podcast>> fetchPodcasts;
+
+  HomePageState() {
+   // fetchPodcasts = ServiceHolder.databaseService.podcastStorage.fetchAll();
+  }
 
   void addPodcast() {
     Navigator.push(
@@ -37,12 +44,37 @@ class HomePageState extends State<HomePage> {
             ),
           ],
         ),
-        body: ListView.builder(
-          itemCount: podcasts.length,
-          itemBuilder: (context, index) {
-            return ListTile(
-              title: Text('Hello ${podcasts[index]}'),
-              onTap: null,
+        body: FutureBuilder(
+          future: fetchPodcasts,
+          builder: (context, snapshot) {
+            if(snapshot.hasError) {
+              return Center(
+                child: Text("Error " + snapshot.error.toString()),
+              );
+            } else if(!snapshot.hasData) {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+
+            List<Podcast> podcasts = snapshot.data;
+            return ListView.builder(
+              itemCount: podcasts.length,
+              itemBuilder: (context, index) {
+                Podcast podcast = podcasts[index];
+                return ListTile(
+                  title: Text(podcast.title),
+                  leading: CachedNetworkImage(
+                      width: 60,
+                      imageUrl: podcast.thumbnailUrl),
+                  subtitle: Text(podcast.author),
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => PodcastDetailPage(podcast: podcast,)
+                    ));
+                  },
+                );
+              },
             );
           },
         )

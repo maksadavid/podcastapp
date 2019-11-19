@@ -28,6 +28,8 @@ dependencies:
   webfeed: ^0.4.2
   flutter_svg: 0.14.3
   logger: 0.7.0+2
+  sqflite: 1.1.7+2
+  moor_flutter: ^2.0.0
 
 dev_dependencies:
   flutter_test:
