@@ -2,33 +2,36 @@
 
 import 'dart:async';
 
+import 'package:tutu/service/database/database_service.dart';
 import 'package:tutu/core/podcast.dart';
+import 'package:tutu/core/podcast_episode.dart';
 
 import 'package:tutu/service/service_holder.dart';
 
 class PodcastDataSource {
 
   Podcast podcast;
-  StreamController<Podcast> _streamController = StreamController();
+  StreamController<Podcast> _podcastStreamController = StreamController();
+  StreamController<List<PodcastEpisode>> _podcastEpisodesStreamController = StreamController();
 
   PodcastDataSource(this.podcast) {
-    if (podcast.id == 0) {
-      ServiceHolder.podcastService.fetchPodcast(podcast.rssUrl).then((p) {
-        _streamController.add(p);
+//    if (podcast.id == 0) {
+      ServiceHolder.podcastService.fetchPodcast(podcast.rssUrl).then((response) {
+        Podcast p = response.podcast.merge(podcast);
+        List<PodcastEpisode> episodes = response.episodes.map((e) => e.merge(podcast)).toList();
+        _podcastStreamController.add(p);
+        _podcastEpisodesStreamController.add(episodes);
       });
-    } else {
-
-
-
-      _streamController.addStream(
-          ServiceHolder.databaseService.podcastStorage.podcastsStream.map((List<Podcast> podcasts) {
-            return podcasts[0];
-          })
-      );
-    }
+//    } else {
+////      _streamController.addStream(
+////          ServiceHolder.databaseService.podcastStorage.podcastsStream.map((List<Podcast> podcasts) {
+////            return podcasts[0];
+////          })
+////      );
+//    }
   }
 
-  Stream<Podcast> getPodcastStream() {
-    return _streamController.stream;
-  }
+  Stream<Podcast> getPodcastStream() => _podcastStreamController.stream;
+  Stream<List<PodcastEpisode>> getPodcastEpisodeStream() => _podcastEpisodesStreamController.stream;
+
 }

@@ -4,10 +4,7 @@
 import 'package:http/http.dart' as http;
 import 'package:tutu/core/itunes_podcast_search_result.dart';
 import 'dart:convert';
-
-import 'package:tutu/core/podcast.dart';
-import 'package:tutu/core/podcast_episode.dart';
-
+import 'package:tutu/service/database/database_service.dart';
 
 class ITunesPodcastService {
 
@@ -32,14 +29,13 @@ class ITunesPodcastService {
   }
 
   static Podcast parsePodcastFromJson(Map<String, dynamic> json) {
-    return Podcast(0,
-        json['trackName'],
-        json['artworkUrl100'],
-        json['artworkUrl60'],
-        json['feedUrl'],
-        json['artistName'],
-        List<PodcastEpisode>(),
-        ""
+    return Podcast(id: 0,
+        title: json['trackName'],
+        imageUrl: json['artworkUrl100'],
+        thumbnailUrl: json['artworkUrl60'],
+        rssUrl: json['feedUrl'],
+        author: json['artistName'],
+        description: ""
     );
   }
 

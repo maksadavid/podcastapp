@@ -11,15 +11,13 @@ class CustomImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if(url != null) {
-      return CachedNetworkImage(
-        imageUrl: url,
-        errorWidget: (context, url, error) {
-          return Container();
-        },
-        placeholder: (context, url) {
-          return Center(
-              child: CircularProgressIndicator());
-        },
+      return FittedBox(
+        child: CachedNetworkImage(
+          imageUrl: url,
+          errorWidget: (context, url, error) {
+            return Container();
+          },
+        ),
       );
     }
     return FittedBox(

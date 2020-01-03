@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:tutu/core/podcast.dart';
 import 'package:tutu/feature/podcast/podcast_data_source.dart';
+import 'package:tutu/service/database/database_service.dart';
 import 'package:tutu/service/service_holder.dart';
 import 'package:tutu/ui/utils/app_colors.dart';
 
@@ -14,15 +14,15 @@ class PodcastDetailPage extends StatefulWidget {
   final Podcast podcast;
 
   @override
-  PodcastDetailPageState createState() => PodcastDetailPageState();
+  PodcastDetailPageState createState() => PodcastDetailPageState(podcast);
 }
 
 class PodcastDetailPageState extends State<PodcastDetailPage> {
 
   PodcastDataSource dataSource;
 
-  PodcastDetailPageState() {
-    dataSource = PodcastDataSource(widget.podcast);
+  PodcastDetailPageState(Podcast podcast) {
+    dataSource = PodcastDataSource(podcast);
   }
 
   @override
@@ -35,7 +35,7 @@ class PodcastDetailPageState extends State<PodcastDetailPage> {
         body: StreamBuilder<Podcast>(
             stream: dataSource.getPodcastStream(),
             builder: (context, snapshot) {
-              if(snapshot.connectionState != ConnectionState.done) {
+              if(snapshot.connectionState == ConnectionState.waiting) {
                 return Center(
                     child: CircularProgressIndicator()
                 );
@@ -46,6 +46,7 @@ class PodcastDetailPageState extends State<PodcastDetailPage> {
                 );
               }
               Podcast podcast = snapshot.data;
+
               return ListView(
                     children: <Widget>[
                       Container(
@@ -61,9 +62,8 @@ class PodcastDetailPageState extends State<PodcastDetailPage> {
                           children: <Widget>[
                             FlatButton(
                                 onPressed: () {
-                                    ServiceHolder.databaseService.podcastStorage.save(podcast).then((f) {
-                                      Scaffold.of(context).showSnackBar( SnackBar(content: Text("Saved"),));
-                                    });
+                                    ServiceHolder.databaseService.savePodcast(podcast);
+                                    Scaffold.of(context).showSnackBar( SnackBar(content: Text("Saved"),));
                                 },
                                 child: Text("Subscribe!",
                                   style: TextStyle(fontSize: 30),
@@ -86,20 +86,46 @@ class PodcastDetailPageState extends State<PodcastDetailPage> {
                         child: ExpandableText(podcast.description),
                         color: AppColors.lightBackground,
                       ),
-                      Container(height: 1, color: AppColors.white),
-                      PodcastEpisodeTile(podcast, 0),
-                      Container(height: 1, color: AppColors.white),
-                      PodcastEpisodeTile(podcast, 1),
-                      Container(height: 1, color: AppColors.white),
-                      PodcastEpisodeTile(podcast, 2),
-                      Container(height: 1, color: AppColors.white),
-                      PodcastEpisodeTile(podcast, 3),
-                      Container(height: 1, color: AppColors.white),
-                      Container(height: 100)
+                      EpisodesList(dataSource),
                     ],
               );
             }
         )
     );
+  }
+}
+
+class EpisodesList extends StatelessWidget {
+
+  final PodcastDataSource dataSource;
+
+  EpisodesList(this.dataSource);
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<List<PodcastEpisode>> (
+      stream: dataSource.getPodcastEpisodeStream(),
+      builder: (context, snapshot) {
+        if(snapshot.connectionState == ConnectionState.waiting) {
+          return Center(
+              child: CircularProgressIndicator()
+          );
+        }
+        if(!snapshot.hasData || snapshot.data.isEmpty) {
+          return Container();
+        }
+        List<Widget> widgets = <Widget>[];
+        int i = 0;
+        for(PodcastEpisode episode in snapshot.data) {
+          widgets.add(Container(height: 1, color: AppColors.white));
+          widgets.add(Container(
+              height: 80,
+              child: PodcastEpisodeTile(episode),
+          ),);
+          if( ++i == 4) break;
+        }
+        widgets.add(Container(height: 1, color: AppColors.white));
+        return Column(children: widgets,);
+      });
   }
 }

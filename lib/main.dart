@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tutu/ui/splash_page.dart';
-import 'utils/app_colors.dart';
+import 'ui/utils/app_colors.dart';
 
 void main() => runApp(MyApp());
 

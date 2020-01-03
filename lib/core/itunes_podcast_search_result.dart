@@ -1,4 +1,4 @@
-import 'package:tutu/core/podcast.dart';
+import 'package:tutu/service/database/database_service.dart';
 
 class ITunesPodcastSearchResult {
 

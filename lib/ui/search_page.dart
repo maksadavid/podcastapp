@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:tutu/core/itunes_podcast_search_result.dart';
-import 'package:tutu/core/podcast.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:tutu/feature/search/podcast_search_data_source.dart';
+import 'package:tutu/service/database/database_service.dart';
 import 'package:tutu/ui/podcast_detail_page.dart';
 
 import 'utils/app_colors.dart';
@@ -91,6 +91,7 @@ class PodcastSearchDelegate extends SearchDelegate<String> {
                     title: Text(podcast.title),
                     leading: CachedNetworkImage(
                         width: 60,
+                        height: 60,
                         imageUrl: podcast.thumbnailUrl),
                     subtitle: Text(podcast.author),
                     onTap: () {

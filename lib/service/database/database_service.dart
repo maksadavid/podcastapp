@@ -1,42 +1,38 @@
 
+import 'package:moor_flutter/moor_flutter.dart';
 
+part 'database_service.g.dart';
 
-import 'package:sqflite/sqflite.dart';
-import 'package:tutu/service/database/storage/podcast_storage.dart';
-import 'package:tutu/service/database/tables/podcast_episode_table.dart';
-import 'package:tutu/service/database/tables/podcast_table.dart';
-
-abstract class Table {
-  void onCreate(Database db);
-  void onUpdate(Database db, int oldVersion, int newVersion);
+class Podcasts extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  TextColumn get title => text()();
+  TextColumn get imageUrl => text()();
+  TextColumn get thumbnailUrl => text()();
+  TextColumn get rssUrl => text()();
+  TextColumn get author => text()();
+  TextColumn get description => text()();
 }
 
-class DatabaseService {
+class PodcastEpisodes extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  IntColumn get podcastId => integer()();
+  TextColumn get title => text()();
+  TextColumn get description => text()();
+  TextColumn get link => text()();
+  IntColumn get pubDate => integer()(); // unix timestamp
+  TextColumn get comments => text()();
+  TextColumn get thumbnailUrl => text()();
+}
 
-  PodcastStorage podcastStorage;
-  List<Table> tables = [
-    PodcastTable(),
-    PodcastEpisodeTable(),
-  ];
+@UseMoor(tables: [Podcasts, PodcastEpisodes])
+class DatabaseService extends _$DatabaseService {
+  DatabaseService() : super(FlutterQueryExecutor.inDatabaseFolder(path: 'db.sqlite'));
 
-  Future<bool> init() async {
-    Database database = await openDatabase('database.db',
-      onCreate: (db, version) {
-        tables.forEach((table) {
-          table.onCreate(db);
-        });
-      },
-      onUpgrade: (db, oldVersion, newVersion) {
-        tables.forEach((table) {
-          table.onUpdate(db, oldVersion, newVersion);
-        });
-      },
-      version: 1,
-    );
+  @override
+  int get schemaVersion => 1;
 
-    podcastStorage = PodcastStorage(database);
-
-    return true;
-  }
+  Stream<List<Podcast>> watchPodcasts() => select(podcasts).watch();
+  Future<int> savePodcast(Podcast podcast) async => await into(podcasts).insert(podcast);
+  Future<void> saveEpisodes(List<PodcastEpisode> episodes) async => await into(podcastEpisodes).insertAll(episodes);
 }
 

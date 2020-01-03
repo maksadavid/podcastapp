@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:tutu/core/podcast.dart';
+import 'package:tutu/service/database/database_service.dart';
+import 'package:tutu/service/service_holder.dart';
 import 'package:tutu/ui/podcast_detail_page.dart';
 import 'package:tutu/ui/search_page.dart';
 
@@ -44,16 +45,20 @@ class HomePageState extends State<HomePage> {
             ),
           ],
         ),
-        body: FutureBuilder(
-          future: fetchPodcasts,
+        body: StreamBuilder(
+          stream: ServiceHolder.databaseService.watchPodcasts(),
           builder: (context, snapshot) {
             if(snapshot.hasError) {
               return Center(
                 child: Text("Error " + snapshot.error.toString()),
               );
-            } else if(!snapshot.hasData) {
+            } else if(snapshot.connectionState == ConnectionState.waiting) {
               return Center(
                 child: CircularProgressIndicator(),
+              );
+            } else if(!snapshot.hasData) {
+              return Center(
+                child: Text("No data"),
               );
             }
 

@@ -1,16 +1,9 @@
 
 
-class PodcastEpisode {
+import 'package:tutu/service/database/database_service.dart';
 
-  int id;
-  int podcastId;
-  String title;
-  String description;
-  String link;
-  String pubDate;
-  String comments;
-
-  PodcastEpisode(this.id, this.podcastId, this.title, this.description,
-      this.link, this.pubDate, this.comments);
-
+extension Extra on PodcastEpisode {
+  PodcastEpisode merge(Podcast podcast) {
+    return copyWith(thumbnailUrl: (thumbnailUrl != null || thumbnailUrl.isEmpty) ? podcast.imageUrl : thumbnailUrl);
+  }
 }
