@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:tutu/service/database/database_service.dart';
 import 'package:tutu/service/service_holder.dart';
 import 'package:tutu/ui/podcast_detail_page.dart';
@@ -23,11 +24,16 @@ class HomePageState extends State<HomePage> {
    // fetchPodcasts = ServiceHolder.databaseService.podcastStorage.fetchAll();
   }
 
-  void addPodcast() {
+  void _addPodcast() {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => SearchPage(title: "Search")),
     );
+  }
+
+  void _presentPlayer() {
+     const platform = const MethodChannel('me.dmaksa.flutter.tutu/player');
+     platform.invokeMethod("presentPlayer");
   }
 
   @override
@@ -41,8 +47,15 @@ class HomePageState extends State<HomePage> {
                     Icons.add,
                     color: AppColors.white
                 ),
-                onPressed: addPodcast
+                onPressed: _addPodcast
             ),
+            IconButton(
+              icon: Icon(
+                Icons.play_arrow,
+                color: AppColors.white,
+              ),
+              onPressed: _presentPlayer,
+            )
           ],
         ),
         body: StreamBuilder(
