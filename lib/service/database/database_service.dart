@@ -33,6 +33,6 @@ class DatabaseService extends _$DatabaseService {
 
   Stream<List<Podcast>> watchPodcasts() => select(podcasts).watch();
   Future<int> savePodcast(Podcast podcast) async => await into(podcasts).insert(podcast);
-  Future<void> saveEpisodes(List<PodcastEpisode> episodes) async => await into(podcastEpisodes).insertAll(episodes);
+  // Future<void> saveEpisodes(List<PodcastEpisode> episodes) async => await into(podcastEpisodes).in
 }
 

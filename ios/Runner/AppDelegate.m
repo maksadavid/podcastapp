@@ -1,5 +1,10 @@
 #include "AppDelegate.h"
 #include "GeneratedPluginRegistrant.h"
+#include "Runner-Swift.h"
+
+@interface AppDelegate()
+@property (nonatomic) Player *player;
+@end
 
 @implementation AppDelegate
 
@@ -24,11 +29,8 @@
 }
 
 - (void)presentPlayer {
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Alert" message:NULL preferredStyle:UIAlertControllerStyleAlert];
-    [alert addAction:[UIAlertAction actionWithTitle:@"Ok" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-        NSLog(@"Alert");
-    }]];
-    [self.window.rootViewController presentViewController:alert animated:YES completion:nil];
+    self.player = [[Player alloc] init];
+    [self.player playWithPresenterVC:self.window.rootViewController];
 }
 
 @end

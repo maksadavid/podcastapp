@@ -44,34 +44,34 @@ class Podcast extends DataClass implements Insertable<Podcast> {
           .mapFromDatabaseResponse(data['${effectivePrefix}description']),
     );
   }
-  factory Podcast.fromJson(Map<String, dynamic> json,
-      {ValueSerializer serializer = const ValueSerializer.defaults()}) {
-    return Podcast(
-      id: serializer.fromJson<int>(json['id']),
-      title: serializer.fromJson<String>(json['title']),
-      imageUrl: serializer.fromJson<String>(json['imageUrl']),
-      thumbnailUrl: serializer.fromJson<String>(json['thumbnailUrl']),
-      rssUrl: serializer.fromJson<String>(json['rssUrl']),
-      author: serializer.fromJson<String>(json['author']),
-      description: serializer.fromJson<String>(json['description']),
-    );
-  }
   @override
-  Map<String, dynamic> toJson(
-      {ValueSerializer serializer = const ValueSerializer.defaults()}) {
-    return {
-      'id': serializer.toJson<int>(id),
-      'title': serializer.toJson<String>(title),
-      'imageUrl': serializer.toJson<String>(imageUrl),
-      'thumbnailUrl': serializer.toJson<String>(thumbnailUrl),
-      'rssUrl': serializer.toJson<String>(rssUrl),
-      'author': serializer.toJson<String>(author),
-      'description': serializer.toJson<String>(description),
-    };
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (!nullToAbsent || id != null) {
+      map['id'] = Variable<int>(id);
+    }
+    if (!nullToAbsent || title != null) {
+      map['title'] = Variable<String>(title);
+    }
+    if (!nullToAbsent || imageUrl != null) {
+      map['image_url'] = Variable<String>(imageUrl);
+    }
+    if (!nullToAbsent || thumbnailUrl != null) {
+      map['thumbnail_url'] = Variable<String>(thumbnailUrl);
+    }
+    if (!nullToAbsent || rssUrl != null) {
+      map['rss_url'] = Variable<String>(rssUrl);
+    }
+    if (!nullToAbsent || author != null) {
+      map['author'] = Variable<String>(author);
+    }
+    if (!nullToAbsent || description != null) {
+      map['description'] = Variable<String>(description);
+    }
+    return map;
   }
 
-  @override
-  PodcastsCompanion createCompanion(bool nullToAbsent) {
+  PodcastsCompanion toCompanion(bool nullToAbsent) {
     return PodcastsCompanion(
       id: id == null && nullToAbsent ? const Value.absent() : Value(id),
       title:
@@ -90,6 +90,33 @@ class Podcast extends DataClass implements Insertable<Podcast> {
           ? const Value.absent()
           : Value(description),
     );
+  }
+
+  factory Podcast.fromJson(Map<String, dynamic> json,
+      {ValueSerializer serializer}) {
+    serializer ??= moorRuntimeOptions.defaultSerializer;
+    return Podcast(
+      id: serializer.fromJson<int>(json['id']),
+      title: serializer.fromJson<String>(json['title']),
+      imageUrl: serializer.fromJson<String>(json['imageUrl']),
+      thumbnailUrl: serializer.fromJson<String>(json['thumbnailUrl']),
+      rssUrl: serializer.fromJson<String>(json['rssUrl']),
+      author: serializer.fromJson<String>(json['author']),
+      description: serializer.fromJson<String>(json['description']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer serializer}) {
+    serializer ??= moorRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'title': serializer.toJson<String>(title),
+      'imageUrl': serializer.toJson<String>(imageUrl),
+      'thumbnailUrl': serializer.toJson<String>(thumbnailUrl),
+      'rssUrl': serializer.toJson<String>(rssUrl),
+      'author': serializer.toJson<String>(author),
+      'description': serializer.toJson<String>(description),
+    };
   }
 
   Podcast copyWith(
@@ -135,7 +162,7 @@ class Podcast extends DataClass implements Insertable<Podcast> {
                   $mrjc(rssUrl.hashCode,
                       $mrjc(author.hashCode, description.hashCode)))))));
   @override
-  bool operator ==(other) =>
+  bool operator ==(dynamic other) =>
       identical(this, other) ||
       (other is Podcast &&
           other.id == this.id &&
@@ -178,6 +205,26 @@ class PodcastsCompanion extends UpdateCompanion<Podcast> {
         rssUrl = Value(rssUrl),
         author = Value(author),
         description = Value(description);
+  static Insertable<Podcast> custom({
+    Expression<int> id,
+    Expression<String> title,
+    Expression<String> imageUrl,
+    Expression<String> thumbnailUrl,
+    Expression<String> rssUrl,
+    Expression<String> author,
+    Expression<String> description,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (title != null) 'title': title,
+      if (imageUrl != null) 'image_url': imageUrl,
+      if (thumbnailUrl != null) 'thumbnail_url': thumbnailUrl,
+      if (rssUrl != null) 'rss_url': rssUrl,
+      if (author != null) 'author': author,
+      if (description != null) 'description': description,
+    });
+  }
+
   PodcastsCompanion copyWith(
       {Value<int> id,
       Value<String> title,
@@ -195,6 +242,47 @@ class PodcastsCompanion extends UpdateCompanion<Podcast> {
       author: author ?? this.author,
       description: description ?? this.description,
     );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (title.present) {
+      map['title'] = Variable<String>(title.value);
+    }
+    if (imageUrl.present) {
+      map['image_url'] = Variable<String>(imageUrl.value);
+    }
+    if (thumbnailUrl.present) {
+      map['thumbnail_url'] = Variable<String>(thumbnailUrl.value);
+    }
+    if (rssUrl.present) {
+      map['rss_url'] = Variable<String>(rssUrl.value);
+    }
+    if (author.present) {
+      map['author'] = Variable<String>(author.value);
+    }
+    if (description.present) {
+      map['description'] = Variable<String>(description.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PodcastsCompanion(')
+          ..write('id: $id, ')
+          ..write('title: $title, ')
+          ..write('imageUrl: $imageUrl, ')
+          ..write('thumbnailUrl: $thumbnailUrl, ')
+          ..write('rssUrl: $rssUrl, ')
+          ..write('author: $author, ')
+          ..write('description: $description')
+          ..write(')'))
+        .toString();
   }
 }
 
@@ -297,50 +385,51 @@ class $PodcastsTable extends Podcasts with TableInfo<$PodcastsTable, Podcast> {
   @override
   final String actualTableName = 'podcasts';
   @override
-  VerificationContext validateIntegrity(PodcastsCompanion d,
+  VerificationContext validateIntegrity(Insertable<Podcast> instance,
       {bool isInserting = false}) {
     final context = VerificationContext();
-    if (d.id.present) {
-      context.handle(_idMeta, id.isAcceptableValue(d.id.value, _idMeta));
-    } else if (id.isRequired && isInserting) {
-      context.missing(_idMeta);
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id'], _idMeta));
     }
-    if (d.title.present) {
+    if (data.containsKey('title')) {
       context.handle(
-          _titleMeta, title.isAcceptableValue(d.title.value, _titleMeta));
-    } else if (title.isRequired && isInserting) {
+          _titleMeta, title.isAcceptableOrUnknown(data['title'], _titleMeta));
+    } else if (isInserting) {
       context.missing(_titleMeta);
     }
-    if (d.imageUrl.present) {
+    if (data.containsKey('image_url')) {
       context.handle(_imageUrlMeta,
-          imageUrl.isAcceptableValue(d.imageUrl.value, _imageUrlMeta));
-    } else if (imageUrl.isRequired && isInserting) {
+          imageUrl.isAcceptableOrUnknown(data['image_url'], _imageUrlMeta));
+    } else if (isInserting) {
       context.missing(_imageUrlMeta);
     }
-    if (d.thumbnailUrl.present) {
+    if (data.containsKey('thumbnail_url')) {
       context.handle(
           _thumbnailUrlMeta,
-          thumbnailUrl.isAcceptableValue(
-              d.thumbnailUrl.value, _thumbnailUrlMeta));
-    } else if (thumbnailUrl.isRequired && isInserting) {
+          thumbnailUrl.isAcceptableOrUnknown(
+              data['thumbnail_url'], _thumbnailUrlMeta));
+    } else if (isInserting) {
       context.missing(_thumbnailUrlMeta);
     }
-    if (d.rssUrl.present) {
-      context.handle(
-          _rssUrlMeta, rssUrl.isAcceptableValue(d.rssUrl.value, _rssUrlMeta));
-    } else if (rssUrl.isRequired && isInserting) {
+    if (data.containsKey('rss_url')) {
+      context.handle(_rssUrlMeta,
+          rssUrl.isAcceptableOrUnknown(data['rss_url'], _rssUrlMeta));
+    } else if (isInserting) {
       context.missing(_rssUrlMeta);
     }
-    if (d.author.present) {
-      context.handle(
-          _authorMeta, author.isAcceptableValue(d.author.value, _authorMeta));
-    } else if (author.isRequired && isInserting) {
+    if (data.containsKey('author')) {
+      context.handle(_authorMeta,
+          author.isAcceptableOrUnknown(data['author'], _authorMeta));
+    } else if (isInserting) {
       context.missing(_authorMeta);
     }
-    if (d.description.present) {
-      context.handle(_descriptionMeta,
-          description.isAcceptableValue(d.description.value, _descriptionMeta));
-    } else if (description.isRequired && isInserting) {
+    if (data.containsKey('description')) {
+      context.handle(
+          _descriptionMeta,
+          description.isAcceptableOrUnknown(
+              data['description'], _descriptionMeta));
+    } else if (isInserting) {
       context.missing(_descriptionMeta);
     }
     return context;
@@ -352,33 +441,6 @@ class $PodcastsTable extends Podcasts with TableInfo<$PodcastsTable, Podcast> {
   Podcast map(Map<String, dynamic> data, {String tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : null;
     return Podcast.fromData(data, _db, prefix: effectivePrefix);
-  }
-
-  @override
-  Map<String, Variable> entityToSql(PodcastsCompanion d) {
-    final map = <String, Variable>{};
-    if (d.id.present) {
-      map['id'] = Variable<int, IntType>(d.id.value);
-    }
-    if (d.title.present) {
-      map['title'] = Variable<String, StringType>(d.title.value);
-    }
-    if (d.imageUrl.present) {
-      map['image_url'] = Variable<String, StringType>(d.imageUrl.value);
-    }
-    if (d.thumbnailUrl.present) {
-      map['thumbnail_url'] = Variable<String, StringType>(d.thumbnailUrl.value);
-    }
-    if (d.rssUrl.present) {
-      map['rss_url'] = Variable<String, StringType>(d.rssUrl.value);
-    }
-    if (d.author.present) {
-      map['author'] = Variable<String, StringType>(d.author.value);
-    }
-    if (d.description.present) {
-      map['description'] = Variable<String, StringType>(d.description.value);
-    }
-    return map;
   }
 
   @override
@@ -428,36 +490,37 @@ class PodcastEpisode extends DataClass implements Insertable<PodcastEpisode> {
           .mapFromDatabaseResponse(data['${effectivePrefix}thumbnail_url']),
     );
   }
-  factory PodcastEpisode.fromJson(Map<String, dynamic> json,
-      {ValueSerializer serializer = const ValueSerializer.defaults()}) {
-    return PodcastEpisode(
-      id: serializer.fromJson<int>(json['id']),
-      podcastId: serializer.fromJson<int>(json['podcastId']),
-      title: serializer.fromJson<String>(json['title']),
-      description: serializer.fromJson<String>(json['description']),
-      link: serializer.fromJson<String>(json['link']),
-      pubDate: serializer.fromJson<int>(json['pubDate']),
-      comments: serializer.fromJson<String>(json['comments']),
-      thumbnailUrl: serializer.fromJson<String>(json['thumbnailUrl']),
-    );
-  }
   @override
-  Map<String, dynamic> toJson(
-      {ValueSerializer serializer = const ValueSerializer.defaults()}) {
-    return {
-      'id': serializer.toJson<int>(id),
-      'podcastId': serializer.toJson<int>(podcastId),
-      'title': serializer.toJson<String>(title),
-      'description': serializer.toJson<String>(description),
-      'link': serializer.toJson<String>(link),
-      'pubDate': serializer.toJson<int>(pubDate),
-      'comments': serializer.toJson<String>(comments),
-      'thumbnailUrl': serializer.toJson<String>(thumbnailUrl),
-    };
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (!nullToAbsent || id != null) {
+      map['id'] = Variable<int>(id);
+    }
+    if (!nullToAbsent || podcastId != null) {
+      map['podcast_id'] = Variable<int>(podcastId);
+    }
+    if (!nullToAbsent || title != null) {
+      map['title'] = Variable<String>(title);
+    }
+    if (!nullToAbsent || description != null) {
+      map['description'] = Variable<String>(description);
+    }
+    if (!nullToAbsent || link != null) {
+      map['link'] = Variable<String>(link);
+    }
+    if (!nullToAbsent || pubDate != null) {
+      map['pub_date'] = Variable<int>(pubDate);
+    }
+    if (!nullToAbsent || comments != null) {
+      map['comments'] = Variable<String>(comments);
+    }
+    if (!nullToAbsent || thumbnailUrl != null) {
+      map['thumbnail_url'] = Variable<String>(thumbnailUrl);
+    }
+    return map;
   }
 
-  @override
-  PodcastEpisodesCompanion createCompanion(bool nullToAbsent) {
+  PodcastEpisodesCompanion toCompanion(bool nullToAbsent) {
     return PodcastEpisodesCompanion(
       id: id == null && nullToAbsent ? const Value.absent() : Value(id),
       podcastId: podcastId == null && nullToAbsent
@@ -479,6 +542,35 @@ class PodcastEpisode extends DataClass implements Insertable<PodcastEpisode> {
           ? const Value.absent()
           : Value(thumbnailUrl),
     );
+  }
+
+  factory PodcastEpisode.fromJson(Map<String, dynamic> json,
+      {ValueSerializer serializer}) {
+    serializer ??= moorRuntimeOptions.defaultSerializer;
+    return PodcastEpisode(
+      id: serializer.fromJson<int>(json['id']),
+      podcastId: serializer.fromJson<int>(json['podcastId']),
+      title: serializer.fromJson<String>(json['title']),
+      description: serializer.fromJson<String>(json['description']),
+      link: serializer.fromJson<String>(json['link']),
+      pubDate: serializer.fromJson<int>(json['pubDate']),
+      comments: serializer.fromJson<String>(json['comments']),
+      thumbnailUrl: serializer.fromJson<String>(json['thumbnailUrl']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer serializer}) {
+    serializer ??= moorRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'podcastId': serializer.toJson<int>(podcastId),
+      'title': serializer.toJson<String>(title),
+      'description': serializer.toJson<String>(description),
+      'link': serializer.toJson<String>(link),
+      'pubDate': serializer.toJson<int>(pubDate),
+      'comments': serializer.toJson<String>(comments),
+      'thumbnailUrl': serializer.toJson<String>(thumbnailUrl),
+    };
   }
 
   PodcastEpisode copyWith(
@@ -531,7 +623,7 @@ class PodcastEpisode extends DataClass implements Insertable<PodcastEpisode> {
                           $mrjc(
                               comments.hashCode, thumbnailUrl.hashCode))))))));
   @override
-  bool operator ==(other) =>
+  bool operator ==(dynamic other) =>
       identical(this, other) ||
       (other is PodcastEpisode &&
           other.id == this.id &&
@@ -579,6 +671,28 @@ class PodcastEpisodesCompanion extends UpdateCompanion<PodcastEpisode> {
         pubDate = Value(pubDate),
         comments = Value(comments),
         thumbnailUrl = Value(thumbnailUrl);
+  static Insertable<PodcastEpisode> custom({
+    Expression<int> id,
+    Expression<int> podcastId,
+    Expression<String> title,
+    Expression<String> description,
+    Expression<String> link,
+    Expression<int> pubDate,
+    Expression<String> comments,
+    Expression<String> thumbnailUrl,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (podcastId != null) 'podcast_id': podcastId,
+      if (title != null) 'title': title,
+      if (description != null) 'description': description,
+      if (link != null) 'link': link,
+      if (pubDate != null) 'pub_date': pubDate,
+      if (comments != null) 'comments': comments,
+      if (thumbnailUrl != null) 'thumbnail_url': thumbnailUrl,
+    });
+  }
+
   PodcastEpisodesCompanion copyWith(
       {Value<int> id,
       Value<int> podcastId,
@@ -598,6 +712,51 @@ class PodcastEpisodesCompanion extends UpdateCompanion<PodcastEpisode> {
       comments: comments ?? this.comments,
       thumbnailUrl: thumbnailUrl ?? this.thumbnailUrl,
     );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (podcastId.present) {
+      map['podcast_id'] = Variable<int>(podcastId.value);
+    }
+    if (title.present) {
+      map['title'] = Variable<String>(title.value);
+    }
+    if (description.present) {
+      map['description'] = Variable<String>(description.value);
+    }
+    if (link.present) {
+      map['link'] = Variable<String>(link.value);
+    }
+    if (pubDate.present) {
+      map['pub_date'] = Variable<int>(pubDate.value);
+    }
+    if (comments.present) {
+      map['comments'] = Variable<String>(comments.value);
+    }
+    if (thumbnailUrl.present) {
+      map['thumbnail_url'] = Variable<String>(thumbnailUrl.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PodcastEpisodesCompanion(')
+          ..write('id: $id, ')
+          ..write('podcastId: $podcastId, ')
+          ..write('title: $title, ')
+          ..write('description: $description, ')
+          ..write('link: $link, ')
+          ..write('pubDate: $pubDate, ')
+          ..write('comments: $comments, ')
+          ..write('thumbnailUrl: $thumbnailUrl')
+          ..write(')'))
+        .toString();
   }
 }
 
@@ -721,56 +880,57 @@ class $PodcastEpisodesTable extends PodcastEpisodes
   @override
   final String actualTableName = 'podcast_episodes';
   @override
-  VerificationContext validateIntegrity(PodcastEpisodesCompanion d,
+  VerificationContext validateIntegrity(Insertable<PodcastEpisode> instance,
       {bool isInserting = false}) {
     final context = VerificationContext();
-    if (d.id.present) {
-      context.handle(_idMeta, id.isAcceptableValue(d.id.value, _idMeta));
-    } else if (id.isRequired && isInserting) {
-      context.missing(_idMeta);
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id'], _idMeta));
     }
-    if (d.podcastId.present) {
+    if (data.containsKey('podcast_id')) {
       context.handle(_podcastIdMeta,
-          podcastId.isAcceptableValue(d.podcastId.value, _podcastIdMeta));
-    } else if (podcastId.isRequired && isInserting) {
+          podcastId.isAcceptableOrUnknown(data['podcast_id'], _podcastIdMeta));
+    } else if (isInserting) {
       context.missing(_podcastIdMeta);
     }
-    if (d.title.present) {
+    if (data.containsKey('title')) {
       context.handle(
-          _titleMeta, title.isAcceptableValue(d.title.value, _titleMeta));
-    } else if (title.isRequired && isInserting) {
+          _titleMeta, title.isAcceptableOrUnknown(data['title'], _titleMeta));
+    } else if (isInserting) {
       context.missing(_titleMeta);
     }
-    if (d.description.present) {
-      context.handle(_descriptionMeta,
-          description.isAcceptableValue(d.description.value, _descriptionMeta));
-    } else if (description.isRequired && isInserting) {
+    if (data.containsKey('description')) {
+      context.handle(
+          _descriptionMeta,
+          description.isAcceptableOrUnknown(
+              data['description'], _descriptionMeta));
+    } else if (isInserting) {
       context.missing(_descriptionMeta);
     }
-    if (d.link.present) {
+    if (data.containsKey('link')) {
       context.handle(
-          _linkMeta, link.isAcceptableValue(d.link.value, _linkMeta));
-    } else if (link.isRequired && isInserting) {
+          _linkMeta, link.isAcceptableOrUnknown(data['link'], _linkMeta));
+    } else if (isInserting) {
       context.missing(_linkMeta);
     }
-    if (d.pubDate.present) {
+    if (data.containsKey('pub_date')) {
       context.handle(_pubDateMeta,
-          pubDate.isAcceptableValue(d.pubDate.value, _pubDateMeta));
-    } else if (pubDate.isRequired && isInserting) {
+          pubDate.isAcceptableOrUnknown(data['pub_date'], _pubDateMeta));
+    } else if (isInserting) {
       context.missing(_pubDateMeta);
     }
-    if (d.comments.present) {
+    if (data.containsKey('comments')) {
       context.handle(_commentsMeta,
-          comments.isAcceptableValue(d.comments.value, _commentsMeta));
-    } else if (comments.isRequired && isInserting) {
+          comments.isAcceptableOrUnknown(data['comments'], _commentsMeta));
+    } else if (isInserting) {
       context.missing(_commentsMeta);
     }
-    if (d.thumbnailUrl.present) {
+    if (data.containsKey('thumbnail_url')) {
       context.handle(
           _thumbnailUrlMeta,
-          thumbnailUrl.isAcceptableValue(
-              d.thumbnailUrl.value, _thumbnailUrlMeta));
-    } else if (thumbnailUrl.isRequired && isInserting) {
+          thumbnailUrl.isAcceptableOrUnknown(
+              data['thumbnail_url'], _thumbnailUrlMeta));
+    } else if (isInserting) {
       context.missing(_thumbnailUrlMeta);
     }
     return context;
@@ -782,36 +942,6 @@ class $PodcastEpisodesTable extends PodcastEpisodes
   PodcastEpisode map(Map<String, dynamic> data, {String tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : null;
     return PodcastEpisode.fromData(data, _db, prefix: effectivePrefix);
-  }
-
-  @override
-  Map<String, Variable> entityToSql(PodcastEpisodesCompanion d) {
-    final map = <String, Variable>{};
-    if (d.id.present) {
-      map['id'] = Variable<int, IntType>(d.id.value);
-    }
-    if (d.podcastId.present) {
-      map['podcast_id'] = Variable<int, IntType>(d.podcastId.value);
-    }
-    if (d.title.present) {
-      map['title'] = Variable<String, StringType>(d.title.value);
-    }
-    if (d.description.present) {
-      map['description'] = Variable<String, StringType>(d.description.value);
-    }
-    if (d.link.present) {
-      map['link'] = Variable<String, StringType>(d.link.value);
-    }
-    if (d.pubDate.present) {
-      map['pub_date'] = Variable<int, IntType>(d.pubDate.value);
-    }
-    if (d.comments.present) {
-      map['comments'] = Variable<String, StringType>(d.comments.value);
-    }
-    if (d.thumbnailUrl.present) {
-      map['thumbnail_url'] = Variable<String, StringType>(d.thumbnailUrl.value);
-    }
-    return map;
   }
 
   @override
@@ -828,5 +958,8 @@ abstract class _$DatabaseService extends GeneratedDatabase {
   $PodcastEpisodesTable get podcastEpisodes =>
       _podcastEpisodes ??= $PodcastEpisodesTable(this);
   @override
-  List<TableInfo> get allTables => [podcasts, podcastEpisodes];
+  Iterable<TableInfo> get allTables => allSchemaEntities.whereType<TableInfo>();
+  @override
+  List<DatabaseSchemaEntity> get allSchemaEntities =>
+      [podcasts, podcastEpisodes];
 }
