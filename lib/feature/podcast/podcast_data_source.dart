@@ -21,6 +21,9 @@ class PodcastDataSource {
         List<PodcastEpisode> episodes = response.episodes.map((e) => e.merge(podcast)).toList();
         _podcastStreamController.add(p);
         _podcastEpisodesStreamController.add(episodes);
+      }).catchError((error) {
+        _podcastStreamController.addError(error);
+        _podcastEpisodesStreamController.add(List<PodcastEpisode>());
       });
 //    } else {
 ////      _streamController.addStream(

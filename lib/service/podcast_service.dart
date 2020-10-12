@@ -17,7 +17,12 @@ class PodcastService {
   }
 
   Future<PodcastServiceResponse> parseRssFeed(String xmlString) async {
-    RssFeed rss = RssFeed.parse(xmlString);
+    RssFeed rss;
+    try {
+      rss = RssFeed.parse(xmlString);
+    } on Exception catch (_) {
+      return Future.error("Failed to parse data");
+    }
     String title = rss.title != null ? rss.title : "";
     String imageUrl = (rss.image != null && rss.image.url != null) ? rss.image.url : "";
     String link = rss.link != null ? rss.link : "";

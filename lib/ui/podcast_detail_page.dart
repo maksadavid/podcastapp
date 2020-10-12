@@ -18,7 +18,6 @@ class PodcastDetailPage extends StatefulWidget {
 }
 
 class PodcastDetailPageState extends State<PodcastDetailPage> {
-
   PodcastDataSource dataSource;
 
   PodcastDetailPageState(Podcast podcast) {
@@ -28,104 +27,118 @@ class PodcastDetailPageState extends State<PodcastDetailPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text(widget.podcast.title),
-        ),
+        appBar: AppBar(),
         backgroundColor: AppColors.lightBackground,
-        body: StreamBuilder<Podcast>(
-            stream: dataSource.getPodcastStream(),
-            builder: (context, snapshot) {
-              if(snapshot.connectionState == ConnectionState.waiting) {
-                return Center(
-                    child: CircularProgressIndicator()
-                );
-              } else if (!snapshot.hasData) {
-                return AlertDialog(
-                    title: Text("Error"),
-                  content: Text(snapshot.error.toString()),
-                );
-              }
-              Podcast podcast = snapshot.data;
-
-              return ListView(
-                    children: <Widget>[
+        body: SingleChildScrollView(
+            child: Column(
+          children: [
+            StreamBuilder<Podcast>(
+                stream: dataSource.getPodcastStream(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Container(
+                      height: 200,
+                      child: Center(child: CircularProgressIndicator()),
+                    );
+                  } else if (!snapshot.hasData) {
+                    return Container(
+                      height: 200,
+                      child: Center(
+                        child: Text("Error: " + snapshot.error.toString())
+                      )
+                    );
+                  }
+                  Podcast podcast = snapshot.data;
+                  return null;
+                }),
+            StreamBuilder<List<PodcastEpisode>>(
+                stream: dataSource.getPodcastEpisodeStream(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting ||
+                      !snapshot.hasData || snapshot.data.isEmpty) {
+                    return Container();
+                  }
+                  List<Widget> widgets = <Widget>[];
+                  int i = 0;
+                  for (PodcastEpisode episode in snapshot.data) {
+                    widgets.add(Container(height: 1, color: AppColors.white));
+                    widgets.add(
                       Container(
-                          height: MediaQuery.of(context).size.width,
-                          width: MediaQuery.of(context).size.width,
-                          color: AppColors.lightBackground,
-                          padding: EdgeInsets.fromLTRB(40, 40, 40, 40),
-                          child: CustomImage(url: podcast.imageUrl,)
+                        height: 80,
+                        child: PodcastEpisodeTile(episode),
                       ),
-                      Container(height: 1, color: AppColors.white),
-                      Container(
-                        child: Row(
-                          children: <Widget>[
-                            FlatButton(
-                                onPressed: () {
-                                    ServiceHolder.databaseService.savePodcast(podcast);
-                                    Scaffold.of(context).showSnackBar( SnackBar(content: Text("Saved"),));
-                                },
-                                child: Text("Subscribe!",
-                                  style: TextStyle(fontSize: 30),
-                                )
-                            )
-                          ],
-                        ),
-                      ),
-                      Container(
-                        padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
-                        child: Text(
-                            podcast.title,
-                          style: TextStyle(
-                            fontSize: 22
-                          ),
-                        ),
-                      ),
-                      Container(
-                        padding: EdgeInsets.fromLTRB(20, 0, 20, 20),
-                        child: ExpandableText(podcast.description),
-                        color: AppColors.lightBackground,
-                      ),
-                      EpisodesList(dataSource),
-                    ],
-              );
-            }
-        )
-    );
+                    );
+                    if (++i == 4) break;
+                  }
+                  widgets.add(Container(height: 1, color: AppColors.white));
+                  return Column(
+                    children: widgets,
+                  );
+                })
+          ],
+        )));
   }
 }
 
-class EpisodesList extends StatelessWidget {
-
-  final PodcastDataSource dataSource;
-
-  EpisodesList(this.dataSource);
+class PodcastHeader extends StatelessWidget {
+  final Podcast _podcast;
+  PodcastHeader(this._podcast);
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<List<PodcastEpisode>> (
-      stream: dataSource.getPodcastEpisodeStream(),
-      builder: (context, snapshot) {
-        if(snapshot.connectionState == ConnectionState.waiting) {
-          return Center(
-              child: CircularProgressIndicator()
-          );
-        }
-        if(!snapshot.hasData || snapshot.data.isEmpty) {
-          return Container();
-        }
-        List<Widget> widgets = <Widget>[];
-        int i = 0;
-        for(PodcastEpisode episode in snapshot.data) {
-          widgets.add(Container(height: 1, color: AppColors.white));
-          widgets.add(Container(
-              height: 80,
-              child: PodcastEpisodeTile(episode),
-          ),);
-          if( ++i == 4) break;
-        }
-        widgets.add(Container(height: 1, color: AppColors.white));
-        return Column(children: widgets,);
-      });
+    return Column(
+        children: <Widget>[
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                  height: 160,
+                  width: 160,
+                  color: AppColors.lightBackground,
+                  padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
+                  child: CustomImage(
+                    url: _podcast.imageUrl,
+                  )
+              ),
+              Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        padding: EdgeInsets.fromLTRB(0, 20, 20, 0),
+                        child: Text(
+                          _podcast.title,
+                          style: TextStyle(fontSize: 18),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 4,
+                        ),
+                      ),
+                      FlatButton(
+                          padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                          onPressed: () {
+                            ServiceHolder.databaseService
+                                .savePodcast(_podcast);
+                            Scaffold.of(context).showSnackBar(SnackBar(
+                              content: Text("Saved"),
+                            ));
+                          },
+                          child: Text(
+                            "Subscribe!",
+                            style: TextStyle(
+                                fontSize: 18, color: AppColors.accent),
+                          ))
+                    ],
+                  )
+              )
+            ],
+          ),
+          Container(
+            padding: EdgeInsets.fromLTRB(20, 0, 20, 20),
+            child: ExpandableText(_podcast.description),
+            color: AppColors.lightBackground,
+          ),
+        ],
+      );
   }
 }

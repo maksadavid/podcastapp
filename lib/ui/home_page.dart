@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:tutu/service/database/database_service.dart';
 import 'package:tutu/service/service_holder.dart';
 import 'package:tutu/ui/podcast_detail_page.dart';
@@ -9,9 +8,7 @@ import 'package:tutu/ui/search_page.dart';
 import 'utils/app_colors.dart';
 
 class HomePage extends StatefulWidget {
-  HomePage({Key key, this.title}) : super(key: key);
-
-  final String title;
+  HomePage({Key key}) : super(key: key);
 
   @override
   HomePageState createState() => HomePageState();
@@ -31,16 +28,11 @@ class HomePageState extends State<HomePage> {
     );
   }
 
-  void _presentPlayer() {
-     const platform = const MethodChannel('me.dmaksa.flutter.tutu/player');
-     platform.invokeMethod("presentPlayer");
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text(widget.title),
+          automaticallyImplyLeading: false,
           actions: <Widget>[
             IconButton(
                 icon: Icon(
@@ -49,13 +41,6 @@ class HomePageState extends State<HomePage> {
                 ),
                 onPressed: _addPodcast
             ),
-            IconButton(
-              icon: Icon(
-                Icons.play_arrow,
-                color: AppColors.white,
-              ),
-              onPressed: _presentPlayer,
-            )
           ],
         ),
         body: StreamBuilder(
@@ -82,7 +67,7 @@ class HomePageState extends State<HomePage> {
                 Podcast podcast = podcasts[index];
                 return ListTile(
                   title: Text(podcast.title),
-                  leading: CachedNetworkImage(
+                  leading: CachedNetworkImage (
                       width: 60,
                       imageUrl: podcast.thumbnailUrl),
                   subtitle: Text(podcast.author),

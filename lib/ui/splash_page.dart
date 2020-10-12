@@ -4,9 +4,7 @@ import 'package:tutu/ui/home_page.dart';
 
 
 class SplashPage extends StatefulWidget {
-  SplashPage({Key key, this.title}) : super(key: key);
-
-  final String title;
+  SplashPage({Key key}) : super(key: key);
 
   @override
   SplashPageState createState() => SplashPageState();
@@ -20,10 +18,8 @@ class SplashPageState extends State<SplashPage> {
     appInitialisation = AppInitialisation.initApp();
     appInitialisation.then((success) {
       if(success) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => HomePage(title: "Home")),
-        );
+        Route route = MaterialPageRoute(builder: (context) => HomePage());
+        Navigator.pushAndRemoveUntil(context, route, (route) => false);
       }
     });
   }

@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: AppColors.primary,
       ),
-      home: SplashPage(title: 'Flutter hello'),
+      home: SplashPage(),
     );
   }
 }
