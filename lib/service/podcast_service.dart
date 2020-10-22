@@ -7,6 +7,8 @@ import 'package:webfeed/domain/rss_feed.dart';
 import 'package:webfeed/domain/rss_item.dart';
 
 import 'database/database_service.dart';
+import 'package:tutu/core/podcast.dart';
+import 'package:tutu/core/podcast_episode.dart';
 
 class PodcastService {
 
@@ -49,4 +51,12 @@ class PodcastServiceResponse {
   Podcast podcast;
   final List<PodcastEpisode> episodes;
   PodcastServiceResponse(this.podcast, this.episodes);
+
+  void merge(Podcast p) {
+    podcast = podcast.merge(p);
+    List<PodcastEpisode> list = episodes.map((e) => e.merge(p)).toList();
+    episodes.clear();
+    episodes.addAll(list);
+  }
+
 }

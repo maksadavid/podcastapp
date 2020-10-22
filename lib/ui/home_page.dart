@@ -73,7 +73,7 @@ class HomePageState extends State<HomePage> {
                   subtitle: Text(podcast.author),
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => PodcastDetailPage(podcast: podcast,)
+                        builder: (context) => PodcastDetailPage(podcast)
                     ));
                   },
                 );

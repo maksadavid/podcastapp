@@ -97,7 +97,7 @@ class PodcastSearchDelegate extends SearchDelegate<String> {
                     onTap: () {
                       Navigator.push(context, MaterialPageRoute(
                         builder: (context) {
-                          return PodcastDetailPage(podcast: podcast);
+                          return PodcastDetailPage(podcast);
                         })
                       );
                     },

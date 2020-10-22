@@ -30,7 +30,7 @@ class ITunesPodcastService {
   }
 
   static Podcast parsePodcastFromJson(Map<String, dynamic> json) {
-    return Podcast(id: 0,
+    return Podcast(id: json['trackId'],
         title: json['trackName'],
         imageUrl: json['artworkUrl100'],
         thumbnailUrl: json['artworkUrl60'],
