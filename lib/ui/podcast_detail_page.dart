@@ -36,13 +36,13 @@ class PodcastDetailPageState extends State<PodcastDetailPage> {
       child: Scaffold(
           appBar: AppBar(),
           backgroundColor: AppColors.lightBackground,
-          body: SingleChildScrollView(
-              child: Column(
-                children: [
-                  PodcastHeader(),
-                  PodcastEpisodeList(),
-                ],
-              ))),
+          body: ListView(
+            children: [
+              PodcastHeader(),
+              PodcastEpisodeList(),
+            ],
+          ),
+      ),
     );
   }
 
