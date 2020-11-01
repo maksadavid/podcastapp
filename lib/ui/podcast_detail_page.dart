@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tutu/feature/podcast/podcast_bloc.dart';
+import 'package:tutu/feature/podcast/podcast_episodes_bloc.dart';
 import 'package:tutu/feature/podcast/podcast_repository.dart';
 import 'package:tutu/service/database/database_service.dart';
 import 'package:tutu/ui/utils/app_colors.dart';
@@ -28,20 +29,21 @@ class PodcastDetailPageState extends State<PodcastDetailPage> {
     return MultiBlocProvider(
       providers: [
         BlocProvider<PodcastBloc>(
-            create: (BuildContext context) => PodcastBloc(widget._repository, widget._podcast)),
-        BlocProvider<PodcastEpisodeListBloc>(
             create: (BuildContext context) =>
-                PodcastEpisodeListBloc(widget._repository, List<PodcastEpisode>())),
+                PodcastBloc(widget._repository, widget._podcast)),
+        BlocProvider<PodcastEpisodeListBloc>(
+            create: (BuildContext context) => PodcastEpisodeListBloc(
+                widget._repository, List<PodcastEpisode>())),
       ],
       child: Scaffold(
-          appBar: AppBar(),
-          backgroundColor: AppColors.lightBackground,
-          body: ListView(
-            children: [
-              PodcastHeader(),
-              PodcastEpisodeList(),
-            ],
-          ),
+        appBar: AppBar(),
+        backgroundColor: AppColors.lightBackground,
+        body: ListView(
+          children: [
+            PodcastHeader(),
+            PodcastEpisodeList(),
+          ],
+        ),
       ),
     );
   }
@@ -56,7 +58,8 @@ class PodcastDetailPageState extends State<PodcastDetailPage> {
 class PodcastHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<PodcastBloc, Podcast>(builder: (context, state) {
+    return BlocBuilder<PodcastBloc, PodcastBlocState>(
+        builder: (context, state) {
       return Column(
         children: <Widget>[
           Row(
@@ -68,7 +71,7 @@ class PodcastHeader extends StatelessWidget {
                   color: AppColors.lightBackground,
                   padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
                   child: CustomImage(
-                    url: context.bloc<PodcastBloc>().state.imageUrl,
+                    url: context.bloc<PodcastBloc>().state.podcast.imageUrl,
                   )),
               Expanded(
                   child: Column(
@@ -78,7 +81,7 @@ class PodcastHeader extends StatelessWidget {
                   Container(
                     padding: EdgeInsets.fromLTRB(0, 20, 20, 0),
                     child: Text(
-                      context.bloc<PodcastBloc>().state.title,
+                      context.bloc<PodcastBloc>().state.podcast.title,
                       style: TextStyle(fontSize: 18),
                       overflow: TextOverflow.ellipsis,
                       maxLines: 4,
@@ -90,7 +93,9 @@ class PodcastHeader extends StatelessWidget {
                         context.bloc<PodcastBloc>().subscribeToPodcast();
                       },
                       child: Text(
-                        "Subscribe!",
+                        context.bloc<PodcastBloc>().state.isSubscribed
+                            ? "Unsubscribe"
+                            : "Subscribe!",
                         style: TextStyle(fontSize: 18, color: AppColors.accent),
                       ))
                 ],
@@ -99,8 +104,8 @@ class PodcastHeader extends StatelessWidget {
           ),
           Container(
             padding: EdgeInsets.fromLTRB(20, 0, 20, 20),
-            child:
-                ExpandableText(context.bloc<PodcastBloc>().state.description),
+            child: ExpandableText(
+                context.bloc<PodcastBloc>().state.podcast.description),
             color: AppColors.lightBackground,
           ),
         ],

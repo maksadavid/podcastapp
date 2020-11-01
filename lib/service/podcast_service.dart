@@ -14,11 +14,14 @@ class PodcastService {
 
   Future<PodcastServiceResponse> fetchPodcast(String url) async {
     final response = await http.get(url);
-    final parsedResponse = await parseRssFeed(response.body);
+    if (response.statusCode != 200) {
+      return Future.error("Failed to connect to the server");
+    }
+    final parsedResponse = await parseRssFeed(response.body, url);
     return parsedResponse;
   }
 
-  Future<PodcastServiceResponse> parseRssFeed(String xmlString) async {
+  Future<PodcastServiceResponse> parseRssFeed(String xmlString, String rssUrl) async {
     RssFeed rss;
     try {
       rss = RssFeed.parse(xmlString);
@@ -27,9 +30,8 @@ class PodcastService {
     }
     String title = rss.title != null ? rss.title : "";
     String imageUrl = (rss.image != null && rss.image.url != null) ? rss.image.url : "";
-    String link = rss.link != null ? rss.link : "";
     String author = rss.author != null ? rss.author : "";
-    Podcast podcast = Podcast(id: 0, title: title, imageUrl: imageUrl, thumbnailUrl: imageUrl, rssUrl: link, author: author, description: rss.description);
+    Podcast podcast = Podcast(id: 0, title: title, imageUrl: imageUrl, thumbnailUrl: imageUrl, rssUrl: rssUrl, author: author, description: rss.description);
     List<PodcastEpisode> episodes = rss.items.map(createFromRssItem).toList();
     return PodcastServiceResponse(podcast, episodes);
   }
@@ -58,5 +60,4 @@ class PodcastServiceResponse {
     episodes.clear();
     episodes.addAll(list);
   }
-
 }
