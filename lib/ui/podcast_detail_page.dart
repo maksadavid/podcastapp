@@ -16,7 +16,9 @@ class PodcastDetailPage extends StatefulWidget {
   final PodcastRepository _repository = PodcastRepository();
 
   PodcastDetailPage(this._podcast) {
-    _repository.loadPodcast(_podcast, 4);
+    Future.delayed(Duration(milliseconds: 300), () {
+      _repository.loadPodcast(_podcast, 4);
+    });
   }
 
   @override
@@ -30,10 +32,10 @@ class PodcastDetailPageState extends State<PodcastDetailPage> {
       providers: [
         BlocProvider<PodcastBloc>(
             create: (BuildContext context) =>
-                PodcastBloc(widget._repository, widget._podcast)),
+                PodcastBloc(widget._repository, null)),
         BlocProvider<PodcastEpisodeListBloc>(
             create: (BuildContext context) => PodcastEpisodeListBloc(
-                widget._repository, List<PodcastEpisode>())),
+                widget._repository, null)),
       ],
       child: Scaffold(
         appBar: AppBar(),
@@ -60,6 +62,12 @@ class PodcastHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<PodcastBloc, PodcastBlocState>(
         builder: (context, state) {
+          if(context.bloc<PodcastBloc>().state.podcast == null) {
+            return Center(
+              heightFactor: 10,
+              child: CircularProgressIndicator(),
+            );
+          }
       return Column(
         children: <Widget>[
           Row(
@@ -119,6 +127,9 @@ class PodcastEpisodeList extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<PodcastEpisodeListBloc, List<PodcastEpisode>>(
       builder: (context, episodes) {
+        if (episodes == null) {
+          return Container();
+        }
         return Column(
           children: [
             for (PodcastEpisode episode in episodes)

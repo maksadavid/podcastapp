@@ -16,6 +16,8 @@ class PodcastRepository {
   Stream<PodcastBlockEvent> getPodcastStream() => _podcastStreamController.stream;
   Stream<List<PodcastEpisode>> getPodcastEpisodeStream() => _podcastEpisodesStreamController.stream;
 
+  List<StreamSubscription> _subscriptions = List<StreamSubscription>();
+
   void loadPodcast(Podcast podcast, int episodeCount) async {
     PodcastServiceResponse response;
     try {
@@ -33,15 +35,16 @@ class PodcastRepository {
     _podcastStreamController.add(PodcastUpdateEvent(response.podcast, p != null));
     int count = min(response.episodes.length, episodeCount);
     _podcastEpisodesStreamController.add(response.episodes.sublist(0, count));
-    ServiceHolder.databaseService.watchPodcast(podcast.id).map((e) => PodcastUpdateEvent(e, true)).listen((event) {
+    _subscriptions.add(ServiceHolder.databaseService.watchPodcast(podcast.id).map((e) => PodcastUpdateEvent(e, true)).listen((event) {
       _podcastStreamController.add(event);
-    });
-    ServiceHolder.databaseService.watchPodcastEpisodes(podcast.id, episodeCount).listen((event) {
+    }));
+    _subscriptions.add(ServiceHolder.databaseService.watchPodcastEpisodes(podcast.id, episodeCount).listen((event) {
       _podcastEpisodesStreamController.add(event);
-    });
+    }));
   }
 
   void dispose() {
+    _subscriptions.forEach((s) { s.cancel(); });
     _podcastStreamController.close();
     _podcastEpisodesStreamController.close();
   }
