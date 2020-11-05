@@ -27,6 +27,10 @@ class PodcastRepository {
 
     Podcast p = await ServiceHolder.databaseService.getPodcast(podcast.id);
 
+    if (_podcastStreamController.isClosed) {
+      return;
+    }
+
     if (response == null) {
       _podcastStreamController.add(PodcastUpdateEvent(podcast, p != null));
       return;

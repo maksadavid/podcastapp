@@ -4,6 +4,7 @@ import 'package:tutu/service/database/database_service.dart';
 import 'package:tutu/service/service_holder.dart';
 import 'package:tutu/ui/podcast_detail_page.dart';
 import 'package:tutu/ui/search_page.dart';
+import 'package:tutu/ui/utils/app_animations.dart';
 
 import 'utils/app_colors.dart';
 
@@ -67,14 +68,15 @@ class HomePageState extends State<HomePage> {
                 Podcast podcast = podcasts[index];
                 return ListTile(
                   title: Text(podcast.title),
-                  leading: CachedNetworkImage (
-                      width: 60,
-                      imageUrl: podcast.thumbnailUrl),
+                  leading: Hero(
+                    tag: podcast.thumbnailUrl,
+                    child: CachedNetworkImage (
+                        width: 60,
+                        imageUrl: podcast.thumbnailUrl),
+                  ),
                   subtitle: Text(podcast.author),
                   onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => PodcastDetailPage(podcast)
-                    ));
+                    AppAnimations.openPage(context, PodcastDetailPage(podcast));
                   },
                 );
               },

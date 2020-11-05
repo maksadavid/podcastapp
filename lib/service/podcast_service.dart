@@ -13,6 +13,10 @@ import 'package:tutu/core/podcast_episode.dart';
 class PodcastService {
 
   Future<PodcastServiceResponse> fetchPodcast(String url) async {
+    bool isValidUrl = url != null && Uri.parse(url).isAbsolute;
+    if (!isValidUrl) {
+      return Future.error("Invalid podcast url");
+    }
     final response = await http.get(url);
     if (response.statusCode != 200) {
       return Future.error("Failed to connect to the server");
