@@ -36,7 +36,9 @@ class SearchPageState extends State<SearchPage> {
             ),
           ],
         ),
-        body: null
+        body: Container(
+          color: AppColors.lightBackground,
+        )
     );
   }
 }

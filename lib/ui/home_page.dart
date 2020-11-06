@@ -18,15 +18,8 @@ class HomePage extends StatefulWidget {
 class HomePageState extends State<HomePage> {
   Future<List<Podcast>> fetchPodcasts;
 
-  HomePageState() {
-   // fetchPodcasts = ServiceHolder.databaseService.podcastStorage.fetchAll();
-  }
-
   void _addPodcast() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => SearchPage(title: "Search")),
-    );
+    AppAnimations.openPage(context, SearchPage(title: "Search"));
   }
 
   @override

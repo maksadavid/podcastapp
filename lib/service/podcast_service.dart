@@ -46,7 +46,7 @@ class PodcastService {
         podcastId:0,
         title: item.title,
         description: item.description,
-        link: item.link,
+        link: item.enclosure.url,
         pubDate: 0, //item.pubDate,
         comments: item.comments,
         thumbnailUrl: "");
